@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VGPP Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #12395b;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+            background: #d9534f;
+            padding: 9px 16px;
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .profile {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .profile h2 {
+            margin-top: 0;
+            color: #12395b;
+        }
+
+        .profile-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .profile-item {
+            min-width: 200px;
+        }
+
+        .profile-item span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .progress-box {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .progress-box h2 {
+            margin-top: 0;
+            color: #12395b;
+        }
+
+        .progress {
+            width: 100%;
+            height: 28px;
+            background: #e2e5e8;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #28a745;
+            color: white;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+        }
+
+        .activity {
+            background: white;
+            padding: 22px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .activity h3 {
+            margin: 0 0 8px 0;
+            color: #333;
+        }
+
+        .submitted {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .file-count {
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .upload-form {
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fafafa;
+            margin-bottom: 12px;
+        }
+
+        button {
+            padding: 11px 20px;
+            background: #1769aa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #0d4f85;
+        }
+
+        .message {
+            background: #dff0d8;
+            color: #27632a;
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .allowed {
+            color: #777;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .container {
+                margin-top: 20px;
+                padding: 0 12px;
+            }
+
+            .activity-header {
+                display: block;
+            }
+
+            .file-count {
+                margin-top: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="header-title">
+        VGPP Monitoring Portal
+    </div>
+
+    <div>
+
+        {{ user.gp_name }}
+
+        &nbsp;&nbsp;
+
+        <a href="/logout" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- Messages -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- GP INFORMATION -->
+
+    <div class="profile">
+
+        <h2>
+            {{ user.gp_name }}
+        </h2>
+
+        <div class="profile-row">
+
+            <div class="profile-item">
+
+                <span>GP Code</span>
+
+                <strong>
+                    {{ user.gp_code }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>Block</span>
+
+                <strong>
+                    {{ user.block }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>District</span>
+
+                <strong>
+                    {{ user.district }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-box">
+
+        <h2>
+            VGPP Progress
+        </h2>
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                style="width: {{ progress }}%;"
+            >
+
+                {{ progress }}%
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVITIES -->
+
+    <h2>
+        Activities & Documents
+    </h2>
+
+
+    {% for activity in activities %}
+
+    <div class="activity">
+
+        <div class="activity-header">
+
+            <div>
+
+                <h3>
+                    {{ activity.name }}
+                </h3>
+
+
+                {% if activity.status == "Submitted" %}
+
+                    <div class="submitted">
+                        ✓ Submitted
+                    </div>
+
+                {% else %}
+
+                    <div class="pending">
+                        ⚠ Pending
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="file-count">
+
+                {{ activity.count }} file(s)
+
+            </div>
+
+        </div>
+
+
+        <!-- UPLOAD -->
+
+        <div class="upload-form">
+
+            <form
+                action="/upload"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <input
+                    type="hidden"
+                    name="activity"
+                    value="{{ activity.folder }}"
+                >
+
+                <input
+                    type="file"
+                    name="file"
+                    required
+                >
+
+                <button type="submit">
+                    Upload Document
+                </button>
+
+                <div class="allowed">
+
+                    Allowed:
+                    PDF, DOC, DOCX,
+                    XLS, XLSX,
+                    JPG, JPEG, PNG
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+
+</div>
+
+</body>
+
+</html>
