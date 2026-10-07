@@ -142,6 +142,52 @@
             white-space: nowrap;
         }
 
+        .documents {
+            margin-top: 16px;
+            padding: 14px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .documents-title {
+            font-weight: bold;
+            color: #12395b;
+            margin-bottom: 10px;
+        }
+
+        .document-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .document-row:last-child {
+            border-bottom: none;
+        }
+
+        .document-name {
+            word-break: break-all;
+            font-size: 13px;
+            color: #444;
+        }
+
+        .document-link {
+            color: white;
+            background: #1769aa;
+            padding: 6px 11px;
+            border-radius: 5px;
+            text-decoration: none;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .document-link:hover {
+            background: #0d4f85;
+        }
+
         .upload-form {
             margin-top: 18px;
             padding-top: 15px;
@@ -375,6 +421,41 @@
             </div>
 
         </div>
+
+
+        <!-- EXISTING DOCUMENTS -->
+
+        {% if activity.files %}
+
+        <div class="documents">
+
+            <div class="documents-title">
+                Uploaded Documents
+            </div>
+
+            {% for file in activity.files %}
+
+            <div class="document-row">
+
+                <span class="document-name">
+                    📄 {{ file.name }}
+                </span>
+
+                <a
+                    href="{{ file.url }}"
+                    target="_blank"
+                    class="document-link"
+                >
+                    View / Download
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
 
 
         <!-- UPLOAD -->
