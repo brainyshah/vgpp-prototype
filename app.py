@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from pathlib import Path
 from datetime import datetime
@@ -481,6 +481,51 @@ def upload():
 
         url_for("dashboard")
 
+    )
+
+
+# ==========================================================
+# VIEW / DOWNLOAD UPLOADED DOCUMENTS
+# ==========================================================
+
+@app.route("/document/<activity>/<path:filename>")
+def view_document(activity, filename):
+
+    # Check login
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    username = session["username"]
+    user = USERS[username]
+
+    # Validate activity
+    if activity not in ACTIVITIES:
+        return "Invalid activity.", 404
+
+    gp_folder = (
+        BASE_FOLDER
+        / user["district"]
+        / user["block"]
+        / user["gp_code"]
+    )
+
+    activity_folder = gp_folder / activity
+
+    requested_file = activity_folder / filename
+
+    # Security check: only allow files inside the selected activity folder
+    try:
+        requested_file.resolve().relative_to(activity_folder.resolve())
+    except ValueError:
+        return "Invalid file path.", 403
+
+    if not requested_file.is_file():
+        return "Document not found.", 404
+
+    return send_from_directory(
+        str(activity_folder),
+        requested_file.name,
+        as_attachment=False
     )
 
 
