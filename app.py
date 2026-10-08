@@ -232,7 +232,19 @@ def dashboard():
 
             "count": len(files),
 
-            "status": status
+            "status": status,
+
+            "files": [
+                {
+                    "name": f.name,
+                    "url": url_for(
+                        "view_document",
+                        activity=folder,
+                        filename=f.name
+                    )
+                }
+                for f in files
+            ]
 
         })
 
